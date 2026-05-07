@@ -5,7 +5,7 @@
   <title>{Rename} AI Chatbot</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="{{ asset('assets/styles.css') }}">
 </head>
 <body>
 
@@ -31,6 +31,6 @@
     <footer class="chat-input-bar">
       <input id="chatInput" placeholder="Type your message..." onkeydown="handleChatKey(event)">
       <button onclick="sendChat()">Send</button>
-<script src="assets/app.js"></script>
+<script src="{{ asset('assets/app.js') }}"></script>
 </body>
 </html>

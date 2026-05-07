@@ -5,7 +5,7 @@
   <title>Send OTP Phone</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="{{ asset('assets/styles.css') }}">
 </head>
 <body>
 
@@ -20,6 +20,6 @@
 
     <button class="btn primary" onclick="sendPhoneOtp()">Send OTP</button>
     <a class="link" href="index.html">Back</a>
-<script src="assets/app.js"></script>
+<script src="{{ asset('assets/app.js') }}"></script>
 </body>
 </html>

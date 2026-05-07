@@ -6,7 +6,7 @@
     <title>{Rename} Apps</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="assets/styles.css">
+    <link rel="stylesheet" href="{{ asset('assets/styles.css') }}">
 </head>
 
 <body>
@@ -20,11 +20,11 @@
                 Access your verification, mailbox, and AI assistant tools from one dashboard.
             </p>
 
-            <a class="btn primary" href="otp-phone.html">📱 Send OTP via SMS</a>
-            <a class="btn light" href="otp-email.html">📧 Send OTP via Email</a>
-            <a class="btn light" href="validate-otp.html">🔐 Validate OTP</a>
-            <a class="btn light" href="mailbox.html">📬 Open Mailbox</a>
-            <a class="btn light" href="ai-chatbot.html">🤖 AI Chatbot</a>
+            <a class="btn primary" href="{{ route('otp.phone') }}">📱 Send OTP via SMS</a>
+            <a class="btn light" href="{{ route('otp.email') }}">📧 Send OTP via Email</a>
+            <a class="btn light" href="{{ route('validate.otp') }}">🔐 Validate OTP</a>
+            <a class="btn light" href="{{ route('mailbox') }}">📬 Open Mailbox</a>
+            <a class="btn light" href="{{ route('ai.chatbot') }}">🤖 AI Chatbot</a>
 
             <br>
             <hr>
