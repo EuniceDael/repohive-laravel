@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>{Rename} AI Chatbot</title>
+  <title>RepoHive AI Chatbot</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="{{ asset('assets/styles.css') }}">
@@ -14,7 +14,7 @@
     <header class="chat-header">
       <div class="ai-orb">🤖</div>
       <div>
-        <h2>{Rename} AI Assistant</h2>
+        <h2>RepoHive AI Assistant</h2>
         <small>Online • Ready to help</small>
       </div>
     </header>
@@ -23,7 +23,7 @@
       <div class="chat-message bot show">
         <div class="avatar">🤖</div>
         <div class="bubble">
-          Hi! I'm your {Rename} AI Assistant. How can I help you today?
+          Hi! I'm your RepoHive AI Assistant. How can I help you today?
         </div>
       </div>
     </section>

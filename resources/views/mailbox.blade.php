@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>{Rename} Mailbox</title>
+  <title>RepoHive Mailbox</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="{{ asset('assets/styles.css') }}">
@@ -12,7 +12,7 @@
 <div class="mailbox">
 
   <aside class="sidebar">
-    <div class="brand white">🐝 {Rename}</div>
+    <div class="brand white">🐝 RepoHive</div>
 
     <button class="compose-btn" onclick="openCompose()">+ Compose</button>
 

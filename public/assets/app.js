@@ -74,8 +74,8 @@ function validateOtp() {
 /* Mailbox */
 const inboxEmails = [
   {
-    title: "Welcome to {Rename} Mail",
-    from: "{Rename} Team",
+    title: "Welcome to RepoHive Mail",
+    from: "RepoHive Team",
     body: "Your secure mailbox is now ready. You can receive workspace updates, system notifications, and team messages."
   },
   {
@@ -86,7 +86,7 @@ const inboxEmails = [
   {
     title: "Project Workspace Invitation",
     from: "Douglas Hill",
-    body: "You have been added to a {Rename} workspace. Open your dashboard to view tasks, repositories, and updates."
+    body: "You have been added to a RepoHive workspace. Open your dashboard to view tasks, repositories, and updates."
   }
 ];
 
@@ -269,10 +269,10 @@ function generateBotReply(message) {
   }
 
   if (text.includes("task") || text.includes("project")) {
-    return "{Rename} helps you organize tasks, repositories, project updates, and team collaboration in one workspace.";
+    return "RepoHive helps you organize tasks, repositories, project updates, and team collaboration in one workspace.";
   }
 
-  return "I can help with mailbox summaries, email drafting, sent history, workspace updates, and {Rename} navigation.";
+  return "I can help with mailbox summaries, email drafting, sent history, workspace updates, and RepoHive navigation.";
 }
 
 function sendChat() {
@@ -342,7 +342,7 @@ function generateBotReply(message) {
   const text = message.toLowerCase();
 
   if (text.includes("email") || text.includes("summarize")) {
-    return "Your mailbox shows recent updates about OTP verification, workspace invitations, and {Rename} activity notifications.";
+    return "Your mailbox shows recent updates about OTP verification, workspace invitations, and RepoHive activity notifications.";
   }
 
   if (text.includes("sent")) {
@@ -357,7 +357,7 @@ function generateBotReply(message) {
     return "OTP verification helps protect user access by confirming ownership of a phone number or email address.";
   }
 
-  return "I can help you understand {Rename} mailbox access, OTP verification, email actions, and workspace updates.";
+  return "I can help you understand RepoHive mailbox access, OTP verification, email actions, and workspace updates.";
 }
 
 function loginWithGoogle() {
