@@ -19,7 +19,7 @@
     <input id="email" type="email" placeholder="example@company.com">
 
     <button class="btn primary" onclick="sendEmailOtp()">Send OTP</button>
-    <a class="link" href="index.html">Back</a>
+    <a class="link" href="{{ route('home') }}">Back</a>
 <script src="{{ asset('assets/app.js') }}"></script>
 </body>
 </html>

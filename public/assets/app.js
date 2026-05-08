@@ -1,32 +1,77 @@
 const prototypeOtp = "123456";
 
+/* =========================
+   OTP FUNCTIONS
+========================= */
+
 function sendPhoneOtp() {
   const phone = document.getElementById("phone").value.trim();
+  if (!phone) { alert("Enter phone number"); return; }
 
-  if (!phone) {
-    alert("Please enter your phone number.");
-    return;
-  }
-
-  localStorage.setItem("otp_target", phone);
-  localStorage.setItem("otp_type", "phone");
-
-  window.location.href = "validate-otp.html";
+  fetch("/api/send-otp", {          // ✅ relative, not hardcoded
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify({ phone })
+  })
+  .then(async res => {
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "API error");
+    alert(data.message);
+    localStorage.setItem("otp_target", phone);
+    window.location.href = "/validate-otp";
+  })
+  .catch(err => alert("Failed to send OTP: " + err.message));
 }
 
 function sendEmailOtp() {
   const email = document.getElementById("email").value.trim();
+  if (!email) { alert("Please enter your email address."); return; }
 
-  if (!email) {
-    alert("Please enter your email address.");
-    return;
-  }
-
-  localStorage.setItem("otp_target", email);
-  localStorage.setItem("otp_type", "email");
-
-  window.location.href = "validate-otp.html";
+  fetch("/api/send-otp", {          // ✅ already correct
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify({ email })
+  })
+  .then(async res => {
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "API error");
+    alert(data.message);
+    localStorage.setItem("otp_target", email);
+    window.location.href = "/validate-otp";
+  })
+  .catch(err => alert("Failed to send OTP: " + err.message));
 }
+
+/* =========================
+   OTP VALIDATION
+========================= */
+
+function validateOtp() {
+  const inputs = document.querySelectorAll(".otp");
+  let otp = "";
+
+  inputs.forEach(input => otp += input.value);
+
+  const message = document.getElementById("message");
+
+  if (otp === prototypeOtp) {
+    localStorage.setItem("verified_user", localStorage.getItem("otp_target"));
+    window.location.href = "/mailbox";
+  } else {
+    message.textContent = "Invalid OTP. Please try again.";
+    message.style.color = "#dc2626";
+  }
+}
+
+/* =========================
+   OTP INPUT UI HANDLING
+========================= */
 
 document.addEventListener("DOMContentLoaded", () => {
   const target = document.getElementById("otpTarget");
@@ -54,39 +99,25 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-function validateOtp() {
-  const inputs = document.querySelectorAll(".otp");
-  let otp = "";
+/* =========================
+   MAILBOX SYSTEM
+========================= */
 
-  inputs.forEach(input => otp += input.value);
-
-  const message = document.getElementById("message");
-
-  if (otp === prototypeOtp) {
-    localStorage.setItem("verified_user", localStorage.getItem("otp_target"));
-    window.location.href = "mailbox.html";
-  } else {
-    message.textContent = "Invalid OTP. Please try again.";
-    message.style.color = "#dc2626";
-  }
-}
-
-/* Mailbox */
 const inboxEmails = [
   {
     title: "Welcome to RepoHive Mail",
     from: "RepoHive Team",
-    body: "Your secure mailbox is now ready. You can receive workspace updates, system notifications, and team messages."
+    body: "Your secure mailbox is now ready."
   },
   {
     title: "OTP Verification Successful",
     from: "Security",
-    body: "Your account verification was successful. This helps keep your mailbox protected."
+    body: "Your account verification was successful."
   },
   {
-    title: "Project Workspace Invitation",
-    from: "Douglas Hill",
-    body: "You have been added to a RepoHive workspace. Open your dashboard to view tasks, repositories, and updates."
+    title: "Project Invitation",
+    from: "Admin",
+    body: "You have been added to a workspace."
   }
 ];
 
@@ -107,19 +138,15 @@ function renderEmails(emails) {
   const list = document.getElementById("mailList");
   list.innerHTML = "";
 
-  if (emails.length === 0) {
-    list.innerHTML = `
-      <div class="mail-item">
-        <strong>No emails found</strong>
-        <small>This folder is empty.</small>
-      </div>
-    `;
+  if (!emails.length) {
+    list.innerHTML = "<div class='mail-item'>No emails found</div>";
     return;
   }
 
   emails.forEach((mail, index) => {
     const item = document.createElement("div");
     item.className = "mail-item";
+
     item.onclick = () => openEmail(mail, item);
 
     item.innerHTML = `
@@ -129,26 +156,17 @@ function renderEmails(emails) {
 
     list.appendChild(item);
 
-    if (index === 0) {
-      item.classList.add("active");
-      openEmail(mail, item);
-    }
+    if (index === 0) openEmail(mail, item);
   });
 }
 
 function openEmail(mail, element) {
-  document.querySelectorAll(".mail-item").forEach(item => {
-    item.classList.remove("active");
-  });
-
-  if (element) {
-    element.classList.add("active");
-  }
+  document.querySelectorAll(".mail-item").forEach(i => i.classList.remove("active"));
+  if (element) element.classList.add("active");
 
   document.getElementById("previewTitle").textContent = mail.title || mail.subject;
-  document.getElementById("previewMeta").textContent = mail.from
-    ? `From: ${mail.from}`
-    : `To: ${mail.to}`;
+  document.getElementById("previewMeta").textContent =
+    mail.from ? `From: ${mail.from}` : `To: ${mail.to}`;
   document.getElementById("previewBody").textContent = mail.body;
 }
 
@@ -160,16 +178,8 @@ function showInbox() {
 
 function showSent() {
   currentBox = "sent";
-  document.getElementById("mailTitle").textContent = "Sent History";
+  document.getElementById("mailTitle").textContent = "Sent";
   renderEmails(sentEmails);
-}
-
-function openCompose() {
-  document.getElementById("composeModal").classList.add("active");
-}
-
-function closeCompose() {
-  document.getElementById("composeModal").classList.remove("active");
 }
 
 function sendEmail() {
@@ -182,98 +192,39 @@ function sendEmail() {
     return;
   }
 
-  const email = {
-    to,
-    subject,
-    body,
-    date: new Date().toLocaleString()
-  };
+  const email = { to, subject, body, date: new Date().toLocaleString() };
 
   sentEmails.unshift(email);
   localStorage.setItem("sent_emails", JSON.stringify(sentEmails));
 
   document.getElementById("sentCount").textContent = sentEmails.length;
 
-  document.getElementById("composeTo").value = "";
-  document.getElementById("composeSubject").value = "";
-  document.getElementById("composeBody").value = "";
-
   closeCompose();
   showSent();
+}
+
+function openCompose() {
+  document.getElementById("composeModal").classList.add("active");
+}
+
+function closeCompose() {
+  document.getElementById("composeModal").classList.remove("active");
 }
 
 function filterMail() {
   const keyword = document.getElementById("searchMail").value.toLowerCase();
   const emails = currentBox === "inbox" ? inboxEmails : sentEmails;
 
-  const filtered = emails.filter(mail => {
-    return JSON.stringify(mail).toLowerCase().includes(keyword);
-  });
+  const filtered = emails.filter(m =>
+    JSON.stringify(m).toLowerCase().includes(keyword)
+  );
 
   renderEmails(filtered);
 }
 
-function sendChat() {
-  const input = document.getElementById("chatInput");
-  const message = input.value.trim();
-
-  if (!message) return;
-
-  appendMessage(message, "user");
-  input.value = "";
-
-  setTimeout(() => {
-    appendMessage(generateBotReply(message), "bot");
-  }, 500);
-}
-
-function quickAsk(text) {
-  document.getElementById("chatInput").value = text;
-  sendChat();
-}
-
-function handleChatKey(event) {
-  if (event.key === "Enter") {
-    sendChat();
-  }
-}
-
-function appendMessage(text, sender) {
-  const chatWindow = document.getElementById("chatWindow");
-
-  const wrapper = document.createElement("div");
-  wrapper.className = `chat-message ${sender}`;
-
-  wrapper.innerHTML = `
-    <div class="avatar">${sender === "user" ? "👤" : "🤖"}</div>
-    <div class="bubble">${text}</div>
-  `;
-
-  chatWindow.appendChild(wrapper);
-  chatWindow.scrollTop = chatWindow.scrollHeight;
-}
-
-function generateBotReply(message) {
-  const text = message.toLowerCase();
-
-  if (text.includes("email") || text.includes("summarize")) {
-    return "Your latest mailbox activity shows new workspace updates, OTP verification confirmation, and project invitation emails.";
-  }
-
-  if (text.includes("sent")) {
-    return "You can open the Sent History section in the mailbox to review all emails you composed and sent in this prototype.";
-  }
-
-  if (text.includes("compose")) {
-    return "Sure. A professional email should include a clear subject, short greeting, direct message, and polite closing.";
-  }
-
-  if (text.includes("task") || text.includes("project")) {
-    return "RepoHive helps you organize tasks, repositories, project updates, and team collaboration in one workspace.";
-  }
-
-  return "I can help with mailbox summaries, email drafting, sent history, workspace updates, and RepoHive navigation.";
-}
+/* =========================
+   CHATBOT SYSTEM
+========================= */
 
 function sendChat() {
   const input = document.getElementById("chatInput");
@@ -293,9 +244,7 @@ function sendChat() {
 }
 
 function handleChatKey(event) {
-  if (event.key === "Enter") {
-    sendChat();
-  }
+  if (event.key === "Enter") sendChat();
 }
 
 function appendMessage(text, sender) {
@@ -317,59 +266,39 @@ function showTyping() {
   const chatWindow = document.getElementById("chatWindow");
 
   const typing = document.createElement("div");
-  typing.className = "chat-message bot";
   typing.id = "typingIndicator";
+  typing.className = "chat-message bot";
 
   typing.innerHTML = `
     <div class="avatar">🤖</div>
     <div class="bubble">
-      <div class="typing">
-        <span></span><span></span><span></span>
-      </div>
+      <div class="typing"><span></span><span></span><span></span></div>
     </div>
   `;
 
   chatWindow.appendChild(typing);
-  chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
 function removeTyping() {
-  const typing = document.getElementById("typingIndicator");
-  if (typing) typing.remove();
+  const t = document.getElementById("typingIndicator");
+  if (t) t.remove();
 }
 
 function generateBotReply(message) {
   const text = message.toLowerCase();
 
-  if (text.includes("email") || text.includes("summarize")) {
-    return "Your mailbox shows recent updates about OTP verification, workspace invitations, and RepoHive activity notifications.";
-  }
+  if (text.includes("email")) return "Mailbox updates are available.";
+  if (text.includes("otp")) return "OTP helps secure your account.";
+  if (text.includes("task")) return "RepoHive manages tasks and projects.";
 
-  if (text.includes("sent")) {
-    return "Your sent email history is available inside the mailbox page. It stores composed messages in this prototype.";
-  }
-
-  if (text.includes("compose")) {
-    return "Sure. Start with a clear subject, write a short message, and end with a polite closing.";
-  }
-
-  if (text.includes("otp")) {
-    return "OTP verification helps protect user access by confirming ownership of a phone number or email address.";
-  }
-
-  return "I can help you understand RepoHive mailbox access, OTP verification, email actions, and workspace updates.";
+  return "I can help you navigate RepoHive.";
 }
 
+/* =========================
+   GOOGLE LOGIN (FAKE)
+========================= */
+
 function loginWithGoogle() {
-  const googleUser = {
-    name: "Google User",
-    email: "google.user@gmail.com",
-    provider: "google"
-  };
-
-  localStorage.setItem("verified_user", googleUser.email);
-  localStorage.setItem("auth_provider", googleUser.provider);
-  localStorage.setItem("user_name", googleUser.name);
-
-  window.location.href = "mailbox.html";
+  localStorage.setItem("verified_user", "google.user@gmail.com");
+  window.location.href = "/mailbox";
 }

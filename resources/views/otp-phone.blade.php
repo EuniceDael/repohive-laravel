@@ -19,7 +19,7 @@
     <input id="phone" type="tel" placeholder="+63 900 000 0000">
 
     <button class="btn primary" onclick="sendPhoneOtp()">Send OTP</button>
-    <a class="link" href="index.html">Back</a>
+    <a class="link" href="{{ route('home') }}">Back</a>
 <script src="{{ asset('assets/app.js') }}"></script>
 </body>
 </html>
