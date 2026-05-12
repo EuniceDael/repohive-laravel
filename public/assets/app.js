@@ -21,7 +21,7 @@ function sendPhoneOtp() {
     if (!res.ok) throw new Error(data.message || "API error");
     alert(data.message);
     localStorage.setItem("otp_target", phone);
-    window.location.href = "/validate-otp";
+    window.location.href = '/otp/validate';
   })
   .catch(err => alert("Failed to send OTP: " + err.message));
 }
@@ -43,7 +43,7 @@ function sendEmailOtp() {
     if (!res.ok) throw new Error(data.message || "API error");
     alert(data.message);
     localStorage.setItem("otp_target", email);
-    window.location.href = "/validate-otp";
+    window.location.href = "/otp/validate";
   })
   .catch(err => alert("Failed to send OTP: " + err.message));
 }

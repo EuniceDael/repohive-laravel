@@ -1,25 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Send OTP Phone</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="{{ asset('assets/styles.css') }}">
-</head>
-<body>
+@extends('layouts.app')
 
+@section('title', 'Send Phone OTP')
+@section('bodyClass', 'auth-surface')
+
+@section('content')
 <div class="center-screen">
-  <div class="card">
-    <div class="brand">📱 Phone Verification</div>
-    <h1>Send OTP to Phone</h1>
-    <p class="muted">Enter your phone number to receive a 6-digit code.</p>
+    <main class="card">
+        <div class="brand">Phone Verification</div>
 
-    <label>Phone Number</label>
-    <input id="phone" type="tel" placeholder="+63 900 000 0000">
+        <h1>Send OTP to Phone</h1>
 
-    <button class="btn primary" onclick="sendPhoneOtp()">Send OTP</button>
-    <a class="link" href="{{ route('home') }}">Back</a>
-<script src="{{ asset('assets/app.js') }}"></script>
-</body>
-</html>
+        <p class="muted">
+            Enter your phone number to receive a 6-digit verification code.
+        </p>
+
+        @if(session('sms_error'))
+        <p style="color:red;">{{ session('sms_error') }}</p>
+        @endif
+
+        <form method="POST" action="{{ route('otp.phone.send') }}">
+          @csrf
+
+          <label for="phone">Phone Number</label>
+          <input
+            id="phone"
+            name="phone" 
+            type="tel" 
+            placeholder="+63 900 000 0000"
+            autocomplete="tel"
+            value="{{ old('phone') }}"
+            required>
+
+             @error('phone')
+                <p class="field-error">{{ $message }}</p>
+            @enderror
+            
+          <button type="submit" class="btn primary">Send OTP</button>
+        </form>
+
+        <a class="link" href="{{ route('otp.email') }}">Use email instead</a>
+        <a class="link subtle-link" href="{{ route('home') }}">Back to hub</a>
+    </main>
+</div>
+@endsection

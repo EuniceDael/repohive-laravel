@@ -20,6 +20,8 @@
 
     <button class="btn primary" onclick="sendEmailOtp()">Send OTP</button>
     <a class="link" href="{{ route('home') }}">Back</a>
-<script src="{{ asset('assets/app.js') }}"></script>
+    <script src="{{ asset('assets/app.js') }}"></script>
+  </div>
+</div>
 </body>
 </html>
