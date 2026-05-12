@@ -15,12 +15,18 @@
     <h1>Send OTP to Email</h1>
     <p class="muted">Enter your email address to receive a 6-digit code.</p>
 
-    <label>Email Address</label>
-    <input id="email" type="email" placeholder="example@company.com">
+    @if(session('email_error'))
+        <p style="color:red;">{{ session('email_error') }}</p>
+    @endif
 
-    <button class="btn primary" onclick="sendEmailOtp()">Send OTP</button>
+    <form method="POST" action="{{ route('otp.email.send') }}">
+        @csrf
+        <label>Email Address</label>
+        <input name="email" type="email" placeholder="example@company.com" required>
+        <button class="btn primary" type="submit">Send OTP</button>
+    </form>
+
     <a class="link" href="{{ route('home') }}">Back</a>
-    <script src="{{ asset('assets/app.js') }}"></script>
   </div>
 </div>
 </body>
