@@ -8,11 +8,12 @@ function sendPhoneOtp() {
   const phone = document.getElementById("phone").value.trim();
   if (!phone) { alert("Enter phone number"); return; }
 
-  fetch("/api/send-otp", {          // ✅ relative, not hardcoded
+  fetch("/otp/phone", {  // ✅ Use your actual route
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Accept": "application/json"
+      "Accept": "application/json",
+      "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
     },
     body: JSON.stringify({ phone })
   })
@@ -21,6 +22,29 @@ function sendPhoneOtp() {
     if (!res.ok) throw new Error(data.message || "API error");
     alert(data.message);
     localStorage.setItem("otp_target", phone);
+    window.location.href = '/otp/validate';
+  })
+  .catch(err => alert("Failed to send OTP: " + err.message));
+}
+
+function sendEmailOtp() {
+  const email = document.getElementById("email").value.trim();
+  if (!email) { alert("Please enter your email address."); return; }
+
+  fetch("/otp/email", {  // ✅ Use your actual route
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+    },
+    body: JSON.stringify({ email })
+  })
+  .then(async res => {
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "API error");
+    alert(data.message);
+    localStorage.setItem("otp_target", email);
     window.location.href = '/otp/validate';
   })
   .catch(err => alert("Failed to send OTP: " + err.message));

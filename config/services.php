@@ -41,7 +41,7 @@ return [
     ],
 
     'repohive_email' => [
-    'base_url' => env('REPOHIVE_SMS_API_BASE'),
-    'token' => env('REPOHIVE_SMS_API_TOKEN'),
-    ],
+    'base_url' => env('REPOHIVE_EMAIL_API_BASE'),
+    'token' => env('REPOHIVE_EMAIL_API_TOKEN'),
+],
 ];

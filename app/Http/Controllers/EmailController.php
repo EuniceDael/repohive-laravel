@@ -45,12 +45,11 @@ class EmailController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to send email.',
-                'error' => $response->json(),
             ], 500);
         }
 
         return back()
-    ->withInput()
-    ->with('email_error', 'Failed: ' . $response->status() . ' - ' . $response->body());
+            ->withInput()
+            ->with('email_error', 'Failed to send OTP.');
     }
 }

@@ -35,23 +35,22 @@ class SmsController extends Controller
             }
 
             return redirect()
-            ->route('validate.otp')
-            ->with([
-                'otp_target' => $phone,
-                'otp_type' => 'phone',
-            ]);
+                ->route('validate.otp')
+                ->with([
+                    'otp_target' => $phone,
+                    'otp_type' => 'phone',
+                ]);
         }
 
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to send OTP. Please try again.',
-                'error' => $response->json(),
+                'message' => 'Failed to send SMS.',
             ], 500);
         }
 
         return back()
-    ->withInput()
-    ->with('sms_error', 'Failed: ' . $response->status() . ' - ' . $response->body());
+            ->withInput()
+            ->with('sms_error', 'Failed to send OTP.');
     }
 }
